@@ -19,7 +19,7 @@ body {
   justify-content: center;
 }
 button {
-  border: 1px solid red;
+  border: none;
   padding: 1rem;
   cursor: pointer;
 }

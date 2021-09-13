@@ -28,10 +28,14 @@ function App() {
     });
     setCurrentMove((prev) => prev + 1);
   };
+  const moveTo = (move) => {
+    setCurrentMove(move);
+  };
   return (
     <>
       <h2>{message}</h2>
       <Board board={current.board} handleClick={handleClick} />
+      <History history={history} moveTo={moveTo} currentMove={currentMove} />
     </>
   );
 }
