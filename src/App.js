@@ -1,28 +1,37 @@
 import React, { useState } from "react";
 import Board from "./components/Board";
+import History from "./components/History";
 import "./root.css";
 import { calculateWinner } from "./shared/CalculateWinner";
 
 function App() {
-  const [board, setBoard] = useState(Array(9).fill(null));
-  const [isXNext, setIsXNext] = useState(true);
+  const [history, setHistory] = useState([
+    { board: Array(9).fill(null), isXNext: true },
+  ]);
+  const [currentMove, setCurrentMove] = useState(0);
 
-  const winner = calculateWinner(board);
-  const message = winner ? `Winner is ${winner}` : `Next Player is ${winner}`;
+  const current = history[currentMove];
+  const winner = calculateWinner(current.board);
+  const message = winner
+    ? `Winner is ${winner}`
+    : `Next Player is ${current.isXNext ? "X" : "O"}`;
 
   const handleClick = (position) => {
-    setBoard((prev) => {
-      return prev.map((square, pos) => {
-        if (pos === position) return isXNext ? "X" : "O";
+    if (current.board[position] || winner) return;
+    setHistory((prev) => {
+      const last = prev[prev.length - 1];
+      const newBoard = last.board.map((square, pos) => {
+        if (pos === position) return last.isXNext ? "X" : "O";
         return square;
       });
+      return prev.concat({ board: newBoard, isXNext: !last.isXNext });
     });
-    setIsXNext((prev) => !prev);
+    setCurrentMove((prev) => prev + 1);
   };
   return (
     <>
       <h2>{message}</h2>
-      <Board board={board} handleClick={handleClick} />
+      <Board board={current.board} handleClick={handleClick} />
     </>
   );
 }
